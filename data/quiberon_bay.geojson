@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Quiberon Bay"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-3.20, 47.30],
+            [-3.00, 47.30],
+            [-3.00, 47.50],
+            [-3.20, 47.50],
+            [-3.20, 47.30]
+          ]
+        ]
+      }
+    }
+  ]
+}
