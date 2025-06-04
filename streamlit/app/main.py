@@ -28,7 +28,7 @@ def _load_locations():
     # gdf_aoi = gpd.read_file(fname)
     # # return gdf_aoi.head(1).geometry.bounds
     # return gdf_aoi.head(1).geometry.bounds.values.tolist()[0]
-    gdf_aoi = gpd.read_file("app/galicia_mussel_farms.geojson")
+    gdf_aoi = gpd.read_file("app/quiberon_bay.geojson")
     gdf_aoi["centroid"] = gdf_aoi.geometry.to_crs(epsg=25830).centroid.to_crs(epsg=4326)
     return gdf_aoi
 
@@ -37,11 +37,11 @@ def _load_locations():
 def _load_and_average_ocean_data_for_location(bounds, tlo, thi):
     xlo, ylo, xhi, yhi = bounds
     data_request = {
-        "dataset_id": "cmems_mod_ibi_phy_anfc_0.027deg-2D_PT1H-m",
+        "dataset_id": "cmems_mod_ibi_wav_anfc_0.027deg_PT1H-i",
         "longitude": [xlo, xhi],
         "latitude": [ylo, yhi],
         "time": [tlo, thi],
-        "variables": ["thetao", "zos"],
+        "variables": ["VHM0", "VMDR"],
     }
     dset = copernicusmarine.open_dataset(
         dataset_id=data_request["dataset_id"],
@@ -56,8 +56,8 @@ def _load_and_average_ocean_data_for_location(bounds, tlo, thi):
     df = dset.to_dataframe()
     df = df.groupby("time").agg(
         {
-            "thetao": "mean",
-            "zos": "mean",
+            "VHM0": "mean",
+            "VMDR": "mean",
         }
     )
     return df
@@ -78,11 +78,11 @@ def _load_and_average_ocean_data_for_all_locations(_locations, tlo, thi):
 def _load_ocean_data_for_map(bounds, tlo, thi):
     xlo, ylo, xhi, yhi = bounds
     data_request = {
-        "dataset_id": "cmems_mod_ibi_phy_anfc_0.027deg-2D_PT1H-m",
+        "dataset_id": "cmems_mod_ibi_wav_anfc_0.027deg_PT1H-i",
         "longitude": [xlo, xhi],
         "latitude": [ylo, yhi],
         "time": [tlo, thi],
-        "variables": ["thetao", "zos"],
+        "variables": ["VHM0", "VMDR"],
     }
     dset = copernicusmarine.open_dataset(
         dataset_id=data_request["dataset_id"],
