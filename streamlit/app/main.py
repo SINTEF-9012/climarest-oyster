@@ -133,7 +133,7 @@ thi = (tlo + datetime.timedelta(hours=24)).isoformat()
 tlo = tlo.isoformat()
 
 # Map Boundaries
-map_bounds = [-9.5, 42.0, -8.5, 43.0]
+map_bounds = [-5, 45, 0, 50]
 
 # Load Ocean Data for Sites
 frames = _load_and_average_ocean_data_for_all_locations(locations, tlo, thi)
@@ -193,17 +193,17 @@ alarm_messages = []
 
 # for site, (lat, lon) in locations.items():
 for i, (site_name, df) in enumerate(frames.items()):
-    ts_temp = df.thetao
-    ts_sea = df.zos
+    ts_temp = df.VHM0
+    # ts_sea = df.VMDR
 
     if (ts_temp > temp_thresh).any():
         alarm_triggered = True
         alarm_messages.append(f"🚨 {site_name}: Temperature Threshold Exceeded")
-    if (ts_sea > sea_thresh).any():
-        alarm_triggered = True
-        alarm_messages.append(
-            f"🌊 {site_name}: Sea Surface (Above Geoid) Threshold Exceeded"
-        )
+    # if (ts_sea > sea_thresh).any():
+    #     alarm_triggered = True
+    #     alarm_messages.append(
+    #         f"🌊 {site_name}: Sea Surface (Above Geoid) Threshold Exceeded"
+    #     )
 
 # ---------- Display Alarm Widget ----------
 st.subheader("🔔 Alarm Status")
@@ -224,7 +224,7 @@ with col1:
 
     # Select variable
     if map_variable == "Temperature":
-        var_data = dset.thetao.sel(time=selected_time, method="nearest")
+        var_data = dset.VHM0.sel(time=selected_time, method="nearest")
         var_label = "Temperature (°C)"
         cmap = cmocean.cm.thermal
         vmin = None
@@ -298,17 +298,17 @@ with col2:
     st.subheader("📈 Time Series for Key Locations")
     fig_ts, axs = plt.subplots(4, 1, figsize=(10, 12), sharex=True)
     for i, (site_name, df) in enumerate(frames.items()):
-        ts_temp = df.thetao
-        ts_sea = df.zos
+        ts_temp = df.VHM0
+        # ts_sea = df.zos
         axs[i].plot(
             ts_temp.index, ts_temp.values, label="Temperature (°C)", color="red"
         )
-        axs[i].plot(
-            ts_sea.index,
-            ts_sea.values,
-            label="Sea Surfac Above Geoid (m)",
-            color="blue",
-        )
+        # axs[i].plot(
+        #     ts_sea.index,
+        #     ts_sea.values,
+        #     label="Sea Surfac Above Geoid (m)",
+        #     color="blue",
+        # )
         axs[i].set_title(f"{site_name}")
         axs[i].legend(loc="upper right")
         axs[i].grid(True)
