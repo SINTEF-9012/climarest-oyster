@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'streamlit/**'
+    paths:
+      - 'streamlit/**'
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: SINTEF-9012/climarest-oyster
